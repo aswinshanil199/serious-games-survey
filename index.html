@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Serious Games Survey</title>
+  <meta charset="UTF-8">
+</head>
+<body>
+  <h1>Serious Games in Organizations: Survey</h1>
+  <form id="surveyForm">
+    <label>Name: <input type="text" name="name" required></label><br><br>
+    <label>Role: <input type="text" name="role" required></label><br><br>
+    <label>Organization: <input type="text" name="organization"></label><br><br>
+    <label>Have you used serious games at work?
+      <select name="usedSeriousGames" required>
+        <option value="">--Choose--</option>
+        <option value="Yes">Yes</option>
+        <option value="No">No</option>
+        <option value="Not sure">Not sure</option>
+      </select>
+    </label><br><br>
+    <label>Rate its usefulness (1 = Poor, 5 = Excellent):
+      <input type="number" name="usefulness" min="1" max="5" required>
+    </label><br><br>
+    <label>Biggest Frustrations: <br>
+      <textarea name="frustrations" rows="4" cols="50"></textarea>
+    </label><br><br>
+    <label>Suggestions for improvement: <br>
+      <textarea name="suggestions" rows="4" cols="50"></textarea>
+    </label><br><br>
+    <button type="submit">Submit</button>
+  </form>
+
+  <p id="status"></p>
+
+  <script>
+    document.getElementById('surveyForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const data = {};
+      formData.forEach((value, key) => (data[key] = value));
+
+      fetch("https://script.google.com/macros/s/AKfycbyd30YCCc8XIftsu2av7JP-ObxjOKZX-NAaxxPBHmahIhv-VhA8XzhCzRmpBrhxHjXR/exec", {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: { 'Content-Type': 'application/json' }
+      })
+      .then(res => res.json())
+      .then(res => {
+        document.getElementById('status').textContent = 'Thanks! Your response was recorded.';
+        document.getElementById('surveyForm').reset();
+      })
+      .catch(err => {
+        console.error(err);
+        document.getElementById('status').textContent = 'Submission failed. Try again.';
+      });
+    });
+  </script>
+</body>
+</html>
